@@ -1,8 +1,8 @@
 import React from 'react'
-
+import './profilUpdate.css'
 const ProfileUpdate = () => {
   return (
-    <h1>yared</h1>
+    <h1>profile</h1>
   )
 }
 
