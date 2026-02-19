@@ -1,0 +1,13 @@
+.ls{
+    background: #001030;
+    color: white;
+    height: 75vh;
+}
+.ls-top{
+    padding: 20px
+}
+.ls-nav{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
