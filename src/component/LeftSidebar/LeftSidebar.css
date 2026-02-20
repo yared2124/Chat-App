@@ -1,7 +1,10 @@
+
 .ls{
     background: #001030;
     color: white;
     height: 75vh;
+    display: flex;
+    flex-direction: column;
 }
 .ls-top{
     padding: 20px
@@ -10,4 +13,68 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+.ls-nav .logo{
+   max-width: 140px;
+}
+.ls-nav .menu img{
+    max-height: 20px;
+    opacity: 0.6;
+    cursor: pointer;
+}
+.ls-search{
+background-color: #002670;
+display: flex;
+align-items: center;
+padding: 10px 12px;
+margin-top: 20px;
+} 
+.ls-search img{
+    width: 16px;
+}  
+.ls-search input{
+    background: transparent;
+    border: none;
+    outline: none;
+    color: white;
+    margin-left: 11  px;
+}
+.ls-search input::placeholder{
+    color: #c8c8c8;
+}
+.ls-list{
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll;
+}
+::-webkit-scrollbar{
+    display: none;
+}
+.friends img{
+    width: 35px;
+    aspect-ratio: 1/1;
+    border-radius: 50%;
+}
+.friends {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 13px
+    
+}
+.friends div{
+    display: flex;
+    flex-direction: column;
+}
+.friends span{
+    font-size: 11px;
+    color: #9f9f9f;
+}
+.friends:hover{
+    background-color: #077eff;
+}
+.friends:hover span{
+    color: white;
 }

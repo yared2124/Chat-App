@@ -2,7 +2,7 @@ import React from 'react'
 import './RightSidebar.css'
 const RightSidebar = () => {
   return (
-    <div>RightSidebar</div>
+    <div></div>
   )
 }
 

@@ -6,12 +6,14 @@ import RightSidebar from '../../component/RightSidebar/RightSidebar'
 
 const Chat = () => {
   return (
+    
     <div className="chat">
       <div className="chat-container"> </div>
       <LeftSidebar />
       <ChatBox />
       <RightSidebar />
     </div>
+    
   );
 }
 
