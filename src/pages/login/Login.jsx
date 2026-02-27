@@ -3,31 +3,37 @@ import './login.css'
 import { useState } from 'react'
 import '../../assets/assets.js'
 import assets from '../../assets/assets.js'
+import { signup } from '../../config/firebase.js'
+
+
 const Login = () => {
 
 const [currState, setCurrState] = useState('Sign Up');
+const [username,setUsername] = useState("");
+const [email,setEmail] = useState("");
+const [password,setPassword] = useState("");
 
   return (
     <div className="login">
       <img src={assets.logo_big} alt="" className="logo" />
       <form className="login-form">
         <h2>{currState}</h2>
-        {currState === "Sign Up" ? (
-          <input
+        {currState === "Sign Up" ?
+          <input onChange={(e)=>setUsername(e.target.value)} value={username}
             type="text"
             placeholder="username"
             className="form-input"
             required
           />
-        ) : null}
+         : null}
 
-        <input
+        <input onChange={(e)=>setEmail(e.target.value)} value={email}
           type="email"
           placeholder="email address"
           className="form-input"
           required
         />
-        <input
+        <input onChange={(e)=>setPassword(e.target.value)} value={password}
           type="password"
           placeholder="password"
           className="form-input"
