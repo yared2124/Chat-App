@@ -31,7 +31,7 @@ const upload = async (file) => {
       },
       (error) => {
 
-        console.error("Upload error:", error);
+       
       },
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
