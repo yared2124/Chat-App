@@ -1,9 +1,9 @@
 import React from 'react'
-import './login.css'
+import './Login.css'
 import { useState } from 'react'
 import '../../assets/assets.js'
 import assets from '../../assets/assets.js'
-import { signup,login,logout } from '../../config/firebase.js'
+import { signup,login } from '../../config/firebase.js'
 
 
 const Login = () => {

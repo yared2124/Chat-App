@@ -1,12 +1,30 @@
 import Login from './pages/login/Login.jsx'
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, useNavigate } from 'react-router-dom'
 import ProfileUpdate from './pages/profilelUpdate/ProfileUpdate.jsx'
 import './App.css'
 import Chat from './pages/Chat/Chat.jsx'
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { onAuthStateChanged } from 'firebase/auth'
+import { useEffect } from 'react'
+import { auth } from './config/firebase.js'
 
-function App() {
+
+const App = () => {
+
+
+  const navigate=useNavigate();
+
+  useEffect(() => {
+  onAuthStateChanged(auth, async(user) => {
+    if (user) {
+navigate("/chat");
+    }else{
+     navigate("/")
+    }
+  })
+}, [])
+
 
   return (
 <>
