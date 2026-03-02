@@ -3,7 +3,7 @@ import './login.css'
 import { useState } from 'react'
 import '../../assets/assets.js'
 import assets from '../../assets/assets.js'
-import { signup } from '../../config/firebase.js'
+import { signup,login,logout } from '../../config/firebase.js'
 
 
 const Login = () => {
@@ -17,6 +17,9 @@ const onSubmitHandler = (event)=>{
   event.preventDefault();
   if(currState === "Sign Up"){
     signup(username,email,password)
+  }
+  else{
+    login(email,password)
   }
 }
 
