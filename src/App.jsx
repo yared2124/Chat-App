@@ -16,6 +16,7 @@ function App() {
       <Route path="/chat" element={<Chat />} />
       <Route path="/profile" element={<ProfileUpdate />} />
     </Routes>
+    {toast.success("Welcome to Chat App")}
     </>
   );
 }
