@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import "./profilUpdate.css";
 import { useNavigate } from "react-router-dom";
 import assets from "../../assets/assets";
@@ -7,6 +7,8 @@ import { auth, db } from "../../config/firebase";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { toast } from "react-toastify";
 import upload from "../../lib/upload";
+import { AppContext } from "../../context/AppContext";
+
 const ProfileUpdate = () => {
   const navigate = useNavigate();
   const [image, setImage] = useState(false);
@@ -14,6 +16,7 @@ const ProfileUpdate = () => {
   const [bio, setBio] = useState("");
   const [uid, setUid] = useState("");
   const [prevImage, setPrevImage] = useState("");
+  const [setUserData] = useContext(AppContext);
 
   const profileUpdate = async (event) => {
     event.preventDefault();
@@ -39,10 +42,14 @@ const ProfileUpdate = () => {
         });
       }
 
-      toast.success("Profile updated successfully");
+      const snap = await getDoc(docRef);
+      setUserData(snap.data());
       navigate("/chat");
+
+      // toast.success("Profile updated successfully");
     } catch (error) {
-      toast.error("Error updating profile");
+      console.error(error);
+      toast.error(error.message);
     }
   };
 
@@ -103,7 +110,13 @@ const ProfileUpdate = () => {
         </form>
         <img
           className="profile-pic"
-          src={image ? URL.createObjectURL(image) : assets.logo_icon}
+          src={
+            image
+              ? URL.createObjectURL(image)
+              : prevImage
+                ? prevImage
+                : assets.logo_icon
+          }
           alt=""
         />
       </div>
