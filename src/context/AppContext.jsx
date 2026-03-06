@@ -4,7 +4,7 @@ import { auth, db } from "../config/firebase.js";
 import { useNavigate } from "react-router-dom";
 import { onSnapshot } from "firebase/firestore";
 
-const AppContext = createContext();
+export const AppContext = createContext();
 
 const AppContextProvider = (props) => {
   const navigate = useNavigate();
@@ -40,6 +40,10 @@ const AppContextProvider = (props) => {
         const chatItems = res.data().chatsData;
         const tempData = [];
         for (const item of chatItems) {
+          const userRef = doc(db, "users", item.rId);
+          const userSnap = await getDoc(userRef);
+          const userData = userSnap.data();
+          tempData.push({...item, userData });
         }
       });
     }
@@ -57,4 +61,4 @@ const AppContextProvider = (props) => {
     <AppContext.Provider value={value}>{props.children}</AppContext.Provider>
   );
 };
-export { AppContext, AppContextProvider };
+export default AppContextProvider ;
