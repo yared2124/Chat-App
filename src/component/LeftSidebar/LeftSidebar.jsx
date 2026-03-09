@@ -3,10 +3,20 @@ import { useState } from "react";
 import "./LeftSidebar.css";
 import assets from "../../assets/assets";
 import { useNavigate } from "react-router-dom";
-import { collection, doc, query, where } from "firebase/firestore";
+import {
+  arrayUnion,
+  collection,
+  doc,
+  query,
+  serverTimestamp,
+  setDoc,
+  updateDoc,
+  where,
+} from "firebase/firestore";
 import { db } from "../../config/firebase";
 import { getDocs } from "firebase/firestore";
 import { AppContext } from "../../context/AppContext";
+import { toast } from "react-toastify";
 
 const LeftSidebar = () => {
   const navigate = useNavigate();
@@ -22,7 +32,7 @@ const LeftSidebar = () => {
         const userRef = collection(db, "users");
         const q = query(userRef, where("username", "==", input.toLowerCase()));
         const querySnap = await getDocs(q);
-        if (!querySnap.empty && querySnap.docs[0].data().id !== userData.id) {
+        if (!querySnap.empty && userData && querySnap.docs[0].data().id !== userData.id) {
           setUser(querySnap.docs[0].data());
         } else {
           setUser(null);
@@ -33,18 +43,41 @@ const LeftSidebar = () => {
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
-  const addChat = async () =>{
+  const addChat = async () => {
     const messagesRef = collection(db, "messages");
-    const chatsRef = collection(db, "chats"); 
+    const chatsRef = collection(db, "chats");
     try {
-      const newMessagesRef = doc(messagesRef)
-      const 
+      const newMessagesRef = doc(messagesRef);
+      await setDoc(newMessagesRef, {
+        createAt: serverTimestamp(),
+        messages: [],
+      });
+      await updateDoc(doc(chatsRef, user.id), {
+        chatsData: arrayUnion({
+          messagesId: newMessagesRef.id,
+          lastMessage: "",
+          rId: userData.id,
+          updatedAt: Date.now(),
+          messageSeen: true,
+        }),
+      });
+
+      await updateDoc(doc(chatsRef, userData.id), {
+        chatsData: arrayUnion({
+          messagesId: newMessagesRef.id,
+          lastMessage: "",
+          rId: user.id,
+          updatedAt: Date.now(),
+          messageSeen: true,
+        }),
+      });
     } catch (error) {
-      
+      toast.error(error.message);
+      console.error(error);
     }
-  }
+  };
 
   return (
     <div className="ls">
@@ -82,7 +115,7 @@ const LeftSidebar = () => {
               <div key={index} className="friends">
                 <img src={assets.profile_img} alt="" />
                 <div>
-                  <p>Friend {index + 1}</p>
+                  <p>yared aregayehu {index + 1}</p>
                   <span>Hello, How are you?</span>
                 </div>
               </div>
