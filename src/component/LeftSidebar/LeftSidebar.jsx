@@ -19,8 +19,9 @@ import { AppContext } from "../../context/AppContext";
 import { toast } from "react-toastify";
 
 const LeftSidebar = () => {
+
   const navigate = useNavigate();
-  const { userData } = useContext(AppContext);
+  const { userData,chatData } = useContext(AppContext);
   const [user, setUser] = useState(null);
   const [showSearch, setShowSearch] = useState(false);
 
@@ -33,7 +34,16 @@ const LeftSidebar = () => {
         const q = query(userRef, where("username", "==", input.toLowerCase()));
         const querySnap = await getDocs(q);
         if (!querySnap.empty && userData && querySnap.docs[0].data().id !== userData.id) {
-          setUser(querySnap.docs[0].data());
+          let userExist = false;
+          chatData.map((user)=>{
+            if(user.id === querySnap.docs[0].data().id){
+              userExist = true;
+            }
+          })
+          if (!userExist) {
+            setUser(querySnap.docs[0].data());
+          }
+          
         } else {
           setUser(null);
         }
