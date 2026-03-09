@@ -3,8 +3,9 @@ import "./LeftSidebar.css";
 import assets from "../../assets/assets";
 import { useNavigate } from "react-router-dom";
 import { collection, query, where } from "firebase/firestore";
-import { db } from "../../../config/firebase";
+import { db } from "../../config/firebase"
 import { getDocs } from "firebase/firestore";
+
 
 const LeftSidebar = () => {
   const navigate = useNavigate();
