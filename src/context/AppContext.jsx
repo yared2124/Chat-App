@@ -4,6 +4,7 @@ import { auth, db } from "../config/firebase.js";
 import { useNavigate } from "react-router-dom";
 import { onSnapshot } from "firebase/firestore";
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const AppContext = createContext();
 
 const AppContextProvider = (props) => {
