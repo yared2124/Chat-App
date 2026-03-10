@@ -119,14 +119,13 @@ const LeftSidebar = () => {
             <p>{user.name}</p>
           </div>
         ) : (
-          Array(12)
-            .fill("")
-            .map((item, index) => (
+         
+            chatData.map((item, index) => (
               <div key={index} className="friends">
-                <img src={assets.profile_img} alt="" />
+                <img src={item.userData.avatar} alt="" />
                 <div>
-                  <p>yared aregayehu {index + 1}</p>
-                  <span>Hello, How are you?</span>
+                  <p>{item.userData.name}</p>
+                  <span>{item.lastMessage}</span>
                 </div>
               </div>
             ))
