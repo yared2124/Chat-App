@@ -11,6 +11,8 @@ const AppContextProvider = (props) => {
   const navigate = useNavigate();
   const [userData, setUserData] = useState(null);
   const [chatData, setChatData] = useState(null);
+  const [messageId,setMessagesId] = useState([]);
+  const [chatUser,setChatUser] = useState(null)
 
   const loadUserData = async (uid) => {
     try {
