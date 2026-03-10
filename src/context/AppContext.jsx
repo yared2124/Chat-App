@@ -16,6 +16,12 @@ const AppContextProvider = (props) => {
       const userRef = doc(db, "users", uid);
       const userSnap = await getDoc(userRef);
       const userData = userSnap.data();
+
+      if (!userData) {
+        console.log("User data not found");
+        return;
+      }
+
       if (userData.avatar && userData.name) {
         navigate("/chat");
       } else {
@@ -37,19 +43,24 @@ const AppContextProvider = (props) => {
     if (userData) {
       const chatRef = doc(db, "chats", userData.id);
       const unSub = onSnapshot(chatRef, async (res) => {
-        const chatItems = res.data().chatsData;
+        const chatDataRes = res.data();
+        if (!chatDataRes || !chatDataRes.chatsData) {
+          setChatData([]);
+          return;
+        }
+        const chatItems = chatDataRes.chatsData;
         const tempData = [];
         for (const item of chatItems) {
           const userRef = doc(db, "users", item.rId);
           const userSnap = await getDoc(userRef);
-          const userData = userSnap.data();
-          tempData.push({...item, userData });
+          const userDataObj = userSnap.data();
+          tempData.push({ ...item, userData: userDataObj });
         }
-        setChatData(tempData.sort((a,b)=>b.updatedAt - a.updatedAt));
-      })
-      return () =>{
+        setChatData(tempData.sort((a, b) => b.updatedAt - a.updatedAt));
+      });
+      return () => {
         unSub();
-      }
+      };
     }
   }, [userData]);
 
@@ -68,4 +79,4 @@ const AppContextProvider = (props) => {
 // const useAppContext = () => {
 //   return useContext(AppContext);
 // };
-export default AppContextProvider ;
+export default AppContextProvider;
