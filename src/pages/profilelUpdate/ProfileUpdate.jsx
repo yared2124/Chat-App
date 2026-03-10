@@ -7,7 +7,7 @@ import { auth, db } from "../../config/firebase";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { toast } from "react-toastify";
 import upload from "../../lib/upload";
-import { AppContext } from "../../context/AppContext";
+import { AppContext } from "../../context/AppContext.jsx";
 
 const ProfileUpdate = () => {
   const navigate = useNavigate();
