@@ -19,9 +19,8 @@ import { AppContext } from "../../context/AppContext";
 import { toast } from "react-toastify";
 
 const LeftSidebar = () => {
-
   const navigate = useNavigate();
-  const { userData,chatData } = useContext(AppContext);
+  const { userData, chatData } = useContext(AppContext);
   const [user, setUser] = useState(null);
   const [showSearch, setShowSearch] = useState(false);
 
@@ -33,17 +32,21 @@ const LeftSidebar = () => {
         const userRef = collection(db, "users");
         const q = query(userRef, where("username", "==", input.toLowerCase()));
         const querySnap = await getDocs(q);
-        if (!querySnap.empty && userData && querySnap.docs[0].data().id !== userData.id) {
+        if (
+          !querySnap.empty &&
+          userData &&
+          querySnap.docs[0].data().id !== userData.id
+        ) {
           let userExist = false;
-          chatData.map((user)=>{
-            if(user.id === querySnap.docs[0].data().id){
-              userExist = true;
-            }
-          })
+          chatData &&
+            chatData.map((user) => {
+              if (user.id === querySnap.docs[0].data().id) {
+                userExist = true;
+              }
+            });
           if (!userExist) {
             setUser(querySnap.docs[0].data());
           }
-          
         } else {
           setUser(null);
         }
@@ -89,6 +92,10 @@ const LeftSidebar = () => {
     }
   };
 
+  const setChat = async (item) => {
+    console.log(item);
+  };
+
   return (
     <div className="ls">
       <div className="ls-top">
@@ -119,16 +126,16 @@ const LeftSidebar = () => {
             <p>{user.name}</p>
           </div>
         ) : (
-         
-            chatData.map((item, index) => (
-              <div key={index} className="friends">
-                <img src={item.userData.avatar} alt="" />
-                <div>
-                  <p>{item.userData.name}</p>
-                  <span>{item.lastMessage}</span>
-                </div>
+          chatData &&
+          chatData.map((item, index) => (
+            <div onClick={() => setChat(item)} key={index} className="friends">
+              <img src={item.userData.avatar} alt="" />
+              <div>
+                <p>{item.userData.name}</p>
+                <span>{item.lastMessageg}</span>
               </div>
-            ))
+            </div>
+          ))
         )}
       </div>
     </div>
