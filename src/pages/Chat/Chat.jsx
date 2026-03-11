@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import './Chat.css'
 import LeftSidebar from "../../component/LeftSidebar/LeftSidebar.jsx";
 import ChatBox from '../../component/ChatBox/ChatBox'
@@ -10,9 +10,17 @@ const Chat = () => {
   const {chatData,userData} = useContext(AppContext)
   const [loading, setLoading] = useState(true)
 
+   useEffect(()=>{
+    if (chatData && userData) {
+      setLoading(false)
+      
+    }
+   },[chatData,userData])
+
   return (
-    <div className="chat">
-      {loading ? (
+    <div className="chat">  
+      {loading 
+      ? (
         <p className="loading">Loading...</p>
       ) : (
         <div className="chat-container">
