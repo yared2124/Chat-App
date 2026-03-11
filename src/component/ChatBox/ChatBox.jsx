@@ -1,8 +1,13 @@
-import React from "react";
+import React, { useContext } from "react";
 import "./ChatBox.css";
 import assets from "../../assets/assets";
+import { AppContext } from "../../context/AppContext";
 const ChatBox = () => {
-  return (
+  const { userData, messagesId, chatUser, messages, setMessages } =
+    useContext(AppContext);
+  const [input, setInput] = React.useState("");
+
+  return chatUser ? (
     <div className="chat-box">
       <div className="chat-user">
         <img src={assets.profile_img} alt="" />
@@ -48,6 +53,11 @@ const ChatBox = () => {
         </label>
         <img src={assets.send_button} alt="" />
       </div>
+    </div>
+  ) : (
+    <div className="chat-welcome">
+      <img src={assets.logo_icon} alt="" />
+      <p>chat anytime, anywhere</p>
     </div>
   );
 };
