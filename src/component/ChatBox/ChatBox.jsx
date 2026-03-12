@@ -1,18 +1,52 @@
-import React, { useContext } from "react";
+import  { useState,useContext, useEffect } from "react";
 import "./ChatBox.css";
 import assets from "../../assets/assets";
 import { AppContext } from "../../context/AppContext";
+import { arrayUnion, doc, onSnapshot, updateDoc } from "firebase/firestore";
+import { db } from "../../config/firebase";
+
 const ChatBox = () => {
-  const { userData, messagesId, chatUser, messages, setMessages } =
-    useContext(AppContext);
-  const [input, setInput] = React.useState("");
+
+  const { userData, messagesId, chatUser, messages, setMessages } =useContext(AppContext);
+
+  const [input, setInput] = useState("");
+
+  const sendMessage = async ( )=>{
+    try {
+      if (input && messagesId) {
+        await updateDoc(doc(db,'messages',messagesId),{
+          messages: arrayUnion({
+            sId:userData.id,
+            text:input,
+            createdAt:new Date()
+          })
+        })
+
+      }
+    } catch (error) {
+      
+    }
+  }
+
+   useEffect(()=>{
+    if (messagesId) {
+      const unSub = onSnapshot(doc(db,'messages' ,messagesId),(res)=>{
+        setMessages(res.data().message.reverse());
+        console.log(res.data().message.reverse());
+      })
+      return ()=>{
+        unSub();
+      }
+    }
+
+   },[messagesId])
 
   return chatUser ? (
     <div className="chat-box">
       <div className="chat-user">
-        <img src={assets.profile_img} alt="" />
+        <img src={chatUser.userData.avatar} alt="" /> 
         <p>
-          yared aregayehu <img className="dot" src={assets.green_dot} alt="" />
+          {chatUser.userData.name} <img className="dot" src={assets.green_dot} alt="" />
         </p>
         <img src={assets.help_icon} className=" help" alt="" />
       </div>
@@ -46,7 +80,7 @@ const ChatBox = () => {
       </div>
 
       <div className="chat-input">
-        <input type="text" placeholder="send a message" />
+        <input onChange={(e)=>setInput(e.target.value)} value={input} type="text" placeholder="send a message" />
         <input type="text" id="image" accept="image/png, image/jpng" hidden />
         <label htmlFor="image">
           <img src={assets.gallery_icon} alt="" />
