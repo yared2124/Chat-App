@@ -2,7 +2,7 @@ import  { useState,useContext, useEffect } from "react";
 import "./ChatBox.css";
 import assets from "../../assets/assets";
 import { AppContext } from "../../context/AppContext";
-import { arrayUnion, doc, onSnapshot, updateDoc } from "firebase/firestore";
+import { arrayUnion, doc, getDoc, onSnapshot, updateDoc } from "firebase/firestore";
 import { db } from "../../config/firebase";
 
 const ChatBox = () => {
@@ -21,7 +21,22 @@ const ChatBox = () => {
             createdAt:new Date()
           })
         })
-
+        
+        const userIDs =[chatUser.rId,userData.id]
+        
+        userIDs.forEach(async (id) => {
+          const userChatsRef = doc(db,'chats', id)
+          const userChatsSnapshot = await getDoc(userChatsRef)
+          if (userChatsSnapshot.exists()) {
+            const userChatData = userChatsSnapshot.data()
+            const chatIndex = userChatData.chatsData.findIndex((c) =>c.messageId === messagesId)
+            userChatData.chatsData[chatIndex].lastMessage = input.slice(0,30);
+            userChatData.chatsData[chatIndex].updatedAt = Date.now();
+            if (userChatData.chatsData[chatIndex].rid === userData.id) {
+                            
+            }
+          }
+        })
       }
     } catch (error) {
       
