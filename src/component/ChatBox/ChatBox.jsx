@@ -4,6 +4,7 @@ import assets from "../../assets/assets";
 import { AppContext } from "../../context/AppContext";
 import { arrayUnion, doc, getDoc, onSnapshot, updateDoc } from "firebase/firestore";
 import { db } from "../../config/firebase";
+import { toast } from "react-toastify";
 
 const ChatBox = () => {
 
@@ -33,74 +34,80 @@ const ChatBox = () => {
             userChatData.chatsData[chatIndex].lastMessage = input.slice(0,30);
             userChatData.chatsData[chatIndex].updatedAt = Date.now();
             if (userChatData.chatsData[chatIndex].rid === userData.id) {
-                            
+              userChatData.chatsData[chatIndex].messageSeen =false;      
             }
+            await updateDoc(userChatsRef,{
+              chatsData:userChatData.chatsData
+            })
           }
         })
       }
     } catch (error) {
-      
+      toast.error(error.message)
     }
+    setInput("");
+  }
+
+  const convertTimestamp = (timestamp) => {
+    let date = timestamp.toDate();
+    const hour = date.getHours();
+    const minute = date.getMinutes();
+    if (hour > 12) {
+      return hour-12 + ":" + minute + "PM";
+    }
+    else{
+       hour  + ":" + minute + "AM";
+    }
+
   }
 
    useEffect(()=>{
     if (messagesId) {
       const unSub = onSnapshot(doc(db,'messages' ,messagesId),(res)=>{
         setMessages(res.data().message.reverse());
-        console.log(res.data().message.reverse());
       })
       return ()=>{
         unSub();
       }
     }
 
-   },[messagesId])
+   },[messagesId]) 
 
   return chatUser ? (
     <div className="chat-box">
       <div className="chat-user">
-        <img src={chatUser.userData.avatar} alt="" /> 
+        <img src={chatUser.userData.avatar} alt="" />
         <p>
-          {chatUser.userData.name} <img className="dot" src={assets.green_dot} alt="" />
+          {chatUser.userData.name}{" "}
+          <img className="dot" src={assets.green_dot} alt="" />
         </p>
         <img src={assets.help_icon} className=" help" alt="" />
       </div>
 
       <div className="chat-msg">
-        <div className="s-msg">
-          <p className="msg">
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-          </p>
-          <div>
-            <img src={assets.profile_img} alt="" />
-            <p>2:30 PM</p>
+        {messages.map((msg, index) => (
+          <div key={index} className={msg.sId === userData.id ? "s-msg" : "r-msg"}>
+            <p className="msg">{msg.text}</p>
+            <div>
+              <img src={msg.sId === userData.id ? userData.avatar : chatUser.userData.avatar} alt="" />
+              <p>{convertTimestamp(msg.createdAt)}</p>
+            </div>
           </div>
-        </div>
-        <div className="s-msg">
-          <img className="msg-img" src={assets.pic1} alt="" />
-          <div>
-            <img src={assets.profile_img} alt="" />
-            <p>2:30 PM</p>
-          </div>
-        </div>
-        <div className="r-msg">
-          <p className="msg">
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-          </p>
-          <div>
-            <img src={assets.profile_img} alt="" />
-            <p>2:30 PM</p>
-          </div>
-        </div>
+        ))}
       </div>
 
       <div className="chat-input">
-        <input onChange={(e)=>setInput(e.target.value)} value={input} type="text" placeholder="send a message" />
+        <input
+          onChange={(e) => setInput(e.target.value)}
+          value={input}
+          type="text"
+          placeholder="send a message"
+        />
         <input type="text" id="image" accept="image/png, image/jpng" hidden />
         <label htmlFor="image">
           <img src={assets.gallery_icon} alt="" />
         </label>
-        <img src={assets.send_button} alt="" />
+        <img onClick={sendMessage} src={assets.send_button} alt="" />
       </div>
     </div>
   ) : (
