@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import {
   arrayUnion,
   collection,
-  doc,
+  doc,getDoc,
   query,
   serverTimestamp,
   setDoc,
@@ -102,7 +102,14 @@ const LeftSidebar = () => {
   const setChat = async (item) => {
     setMessagesId(item.messagesId);
     setChatUser(item);
-  };
+    const userChatsRef = doc(db,'chats',userData.id);
+    const userChatsSnapshot = await getDoc(userChatsRef);
+    const userChatsData = userChatsSnapshot.data();
+    const chatIndex = userChatsData.chatsData.findIndex((c)=>c.messageId===item.messageId)
+    userChatsData.chatsData[chatIndex].messageSeen = true;
+  }
+
+
 
   return (
     <div className="ls">
