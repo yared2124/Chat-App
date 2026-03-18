@@ -16,7 +16,7 @@ const RightSidebar = () => {
           temVar.push(msg.image)
         }
       })
-      console.log(temVar)
+    setMsgImages(temVar)
     }, [messages]);
 
   return chatUser ? (
@@ -33,6 +33,7 @@ const RightSidebar = () => {
       <div className="rs-media">
         <p>media</p>
         <div>
+        {msgImages.map((url,index)=>(<img onClick={()=>window.open(url)} key={index} src={url} alt='' />))}
           {/* <img src={assets.pic1} alt="" />
         <img src={assets.pic2} alt="" />
         <img src={assets.pic3} alt="" />
